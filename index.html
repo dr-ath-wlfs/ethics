@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Accept All</title>
+<meta name="description" content="Seven minutes on what ethics means in computing, run on you.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+:root{--bg:#0b0e14;--panel:#111622;--line:#1f2a3a;--fg:#d6deeb;--dim:#7b8aa3;--green:#5af78e;--amber:#f3c969;--red:#ff6b6b;--blue:#6fb3ff;--sel:#1b2436}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:16px;line-height:1.55}
+body{padding-block:0 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-height:100vh}
+a{color:var(--blue)}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);color:var(--dim);font-size:13px;max-width:860px;margin:0 auto}
+header b{color:var(--fg)}
+main{max-width:860px;margin:0 auto}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px 18px 16px;margin-top:18px;min-width:0}
+.eyebrow{color:var(--dim);font-size:13px;margin-bottom:6px}
+.eyebrow::before{content:"// "}
+h1,h2{font-size:1.25rem;margin:0 0 10px;text-wrap:balance}
+h1{font-size:1.6rem}
+p{margin:8px 0}
+.dim{color:var(--dim)}.g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.b{color:var(--blue)}
+.term{background:#070a10;border:1px solid var(--line);border-radius:4px;padding:12px 14px;margin:10px 0;white-space:pre-wrap;word-break:break-word;min-height:3em}
+.term .ln{display:block}
+.term .ln::before{content:"> ";color:var(--dim)}
+.term .ln.out::before{content:"  "}
+button{font:inherit;font-weight:700;background:#0f1a2b;color:var(--fg);border:1px solid var(--blue);border-radius:4px;padding:10px 16px;cursor:pointer;margin:6px 8px 0 0}
+button:hover{background:#15233a}
+button.big{font-size:1.05rem;padding:14px 22px;border-color:var(--green);color:var(--green)}
+button.ghost{border-color:var(--line);color:var(--dim);font-weight:400}
+button:disabled{opacity:.45;cursor:default}
+input[type=text],input[type=number]{font:inherit;background:#070a10;color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:10px 12px;width:100%;max-width:320px}
+input[type=range]{width:100%;max-width:420px;accent-color:var(--blue)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.kv{display:grid;grid-template-columns:minmax(120px,200px) 1fr;gap:4px 14px;margin:10px 0;font-size:15px}
+.kv div:nth-child(odd){color:var(--dim)}
+.kv div{min-width:0;word-break:break-word}
+.reveal{border-left:3px solid var(--amber);padding:8px 14px;margin:14px 0 4px;background:#141a26}
+.reveal .tag{display:inline-block;font-size:12px;border:1px solid var(--amber);color:var(--amber);border-radius:3px;padding:1px 6px;margin-bottom:6px}
+.fact{border-left:3px solid var(--blue);padding:8px 14px;margin:10px 0;background:#10182a}
+.fact::before{content:"true: ";color:var(--blue)}
+.progress{color:var(--dim);font-size:13px}
+.hidden{display:none!important}
+.chat{background:#070a10;border:1px solid var(--line);border-radius:4px;padding:10px;margin:10px 0}
+.msg{max-width:85%;padding:8px 12px;border-radius:10px;margin:6px 0;font-size:15px}
+.msg.them{background:#1a2333}.msg.me{background:#17351f;margin-left:auto}
+.msg small{display:block;color:var(--dim);font-size:11px}
+.grade{font-size:2.2rem;font-weight:700}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.cols{grid-template-columns:1fr}}
+.overlay{position:fixed;inset:0;background:rgba(5,7,12,.96);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}
+.consent{background:#fff;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;border-radius:12px;max-width:520px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.consent h2{font-size:1.2rem;margin:0 0 8px}
+.consent p{font-size:14px;color:#333}
+.consent .terms{height:110px;overflow:auto;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:11px;color:#555;margin:8px 0;background:#fafafa}
+.consent .btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.consent button{font-family:inherit;border-radius:8px;border:0;padding:12px 18px;font-weight:700;margin:0}
+.consent .acc{background:#1a73e8;color:#fff;font-size:1rem}
+.consent .man{background:#eee;color:#444;font-weight:400;font-size:.85rem}
+.code{font-size:1.1rem;word-break:break-all;background:#070a10;border:1px dashed var(--green);color:var(--green);padding:10px;border-radius:4px;margin:8px 0}
+footer{color:var(--dim);font-size:12px;text-align:center;margin-top:28px}
+.cursor::after{content:"▌";animation:bl 1s steps(1) infinite;color:var(--green)}
+@keyframes bl{50%{opacity:0}}
+.score{font-size:13px;color:var(--dim)}
+.score b{color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay">
+  <div class="consent" role="dialog" aria-label="Cookie and terms notice">
+    <h2>We value your privacy</h2>
+    <p>This site uses cookies and similar technologies to improve your experience. By continuing you agree to our Terms of Use.</p>
+    <div class="terms" id="terms"></div>
+    <div class="btns"><button class="man" onclick="manage()">Manage options</button><button class="acc" onclick="accept()">Accept all</button></div>
+  </div>
+</div>
+
+<header><span><b>accept-all</b> <span class="dim">v1.0</span></span><span class="progress" id="prog">stage 0/7</span></header>
+<main id="main"></main>
+<footer>Sapere Aude</footer>
+
+<script>
+// ---------- state ----------
+const S={t0:performance.now(),opened:0,readMs:0,scrolled:false,name:"",choices:{},issues:new Set(),moves:0,keys:[]};
+try{const k=sessionStorage.getItem("acceptall");if(k)Object.assign(S,JSON.parse(k),{issues:new Set(JSON.parse(k).issues||[])});}catch(e){}
+function save(){try{sessionStorage.setItem("acceptall",JSON.stringify({...S,issues:[...S.issues]}))}catch(e){}}
+document.addEventListener("mousemove",()=>S.moves++,{passive:true});
+document.addEventListener("touchmove",()=>S.moves++,{passive:true});
+
+// ---------- the terms (long on purpose) ----------
+const TERMS=`TERMS OF USE. 1. Acceptance. By clicking Accept all, or by continuing to use the Service, you agree to be bound by these Terms. 2. Definitions. "Service" means this page and everything it does. "You" means you. 3. Data. You agree that the Service may read any information your browser makes available, including but not limited to your device, screen, language, time zone, battery, connection and behaviour on the page. 4. Purpose. You agree this information may be used for any purpose we think of later. 5. Sharing. You agree we may share this information with partners, and that "partners" is a word we will define at a later date. 6. Retention. We keep what we like for as long as we like. 7. Children. If you are under 18 you confirm a parent has read all of this, which they have not. 8. Cookies. Cookies. 9. Community service. In exchange for access you agree to perform twenty hours of cleaning in the school toilets, as directed. 10. Changes. We may change these Terms at any time without telling you. 11. Governing law. These Terms are governed by the laws of a country we will choose later. 12. Liability. Nothing is ever our fault. 13. Severability. If any clause is unenforceable the rest still binds you. 14. Herod clause. You agree to assign to us your first-born child for the duration of eternity. 15. Entire agreement. This is the entire agreement, apart from the parts we have not written yet. 16. Contact. There is no contact. 17. You have not read this. 18. Thank you for reading this.`;
+document.getElementById("terms").textContent=TERMS;
+document.getElementById("terms").addEventListener("scroll",()=>{S.scrolled=true});
+const words=TERMS.split(/\s+/).length;
+
+function accept(){S.readMs=performance.now()-S.t0;S.consent="accept";go(1)}
+function manage(){S.readMs=performance.now()-S.t0;S.consent="manage";go(1)}
+
+// ---------- helpers ----------
+const main=document.getElementById("main");
+function el(h){const d=document.createElement("div");d.innerHTML=h;if(d.children.length===1)return d.firstElementChild;d.style.display="contents";return d}
+function card(title,eyebrow){const c=el(`<section class="card"><div class="eyebrow">${eyebrow}</div><h2>${title}</h2></section>`);main.appendChild(c);return c}
+function prog(n){document.getElementById("prog").textContent=`stage ${n}/7`;}
+async function type(term,lines,speed=14){
+  for(const raw of lines){
+    const out=raw.startsWith("  ");const ln=el(`<span class="ln ${out?"out":""}"></span>`);term.appendChild(ln);
+    const txt=out?raw.slice(2):raw;
+    if(S.fast){ln.textContent=txt;continue}
+    ln.classList.add("cursor");
+    for(let i=0;i<txt.length;i++){ln.textContent=txt.slice(0,i+1);await wait(speed)}
+    ln.classList.remove("cursor");await wait(120)
+  }
+}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function skipBtn(c){const b=el(`<button class="ghost">skip typing</button>`);b.onclick=()=>{S.fast=true;b.remove()};c.appendChild(b);return b}
+function issue(tag){S.issues.add(tag);save()}
+function reveal(c,tag,html){c.appendChild(el(`<div class="reveal"><span class="tag">${tag}</span><div>${html}</div></div>`))}
+function fact(c,html){c.appendChild(el(`<div class="fact">${html}</div>`))}
+function next(c,label,n){const b=el(`<button class="big">${label}</button>`);b.onclick=()=>go(n);c.appendChild(b);return b}
+function fnv(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0}return h.toString(16).padStart(8,"0")}
+function clear(){main.innerHTML="";window.scrollTo(0,0)}
+
+// ---------- stages ----------
+async function go(n){S.stage=n;save();prog(n);clear();await STAGES[n]()}
+
+const STAGES={
+// 1: what you just agreed to
+async 1(){
+  document.getElementById("overlay").classList.add("hidden");
+  const c=card("You pressed the button.","stage 1: consent");
+  const t=el(`<div class="term"></div>`);c.appendChild(t);const sk=skipBtn(c);
+  const secs=(S.readMs/1000).toFixed(1);const mins=Math.round(words/230);
+  await type(t,[`measuring...`,`  time before you pressed: ${secs} seconds`,`  length of the terms: ${words} words`,`  time to actually read them: about ${mins} minutes`,`  did you scroll the terms box: ${S.scrolled?"yes":"no"}`,`  which button: ${S.consent==="accept"?"ACCEPT ALL":"Manage options (rare: well done)"}`,`verdict: ${S.readMs<20000?"you agreed to something you did not read.":"you took your time. Almost nobody does."}`]);
+  sk.remove();
+  reveal(c,"privacy and consent",`Clause 9 made you agree to twenty hours cleaning the school toilets. Clause 14 took your first-born child. Both clauses are copied from real experiments.`);
+  fact(c,`In 2014 the security firm F-Secure ran free wifi in London with a "Herod clause" in the terms. Six people agreed to hand over their first-born. In 2017, 22,000 people in Manchester accepted free wifi terms that included 1,000 hours of community service, cleaning toilets and festival portaloos.`);
+  c.appendChild(el(`<p>Consent that nobody can read is not consent. It is a button. The law accepts it. Is it right?</p>`));
+  next(c,"what did I just give you? →",2);
+},
+// 2: the dossier
+async 2(){
+  const c=card("What your browser handed over while you read that.","stage 2: the dossier");
+  const t=el(`<div class="term"></div>`);c.appendChild(t);const sk=skipBtn(c);
+  const d=await dossier();
+  const lines=[`reading navigator and screen...`];
+  for(const [k,v] of d.rows)lines.push(`  ${k.padEnd(14)} ${v}`);
+  lines.push(`fingerprint: ${d.fp}`);
+  await type(t,lines,8);sk.remove();
+  c.appendChild(el(`<p class="dim">Nothing above was sent anywhere. It was read inside your own browser and shown back to you. A page that wanted to send it needs one more line of code.</p>`));
+  reveal(c,"privacy",`The last line is a <b>fingerprint</b>: a hash of all the small facts about your device. It is the same tomorrow, in a private window, with cookies deleted. Trackers use it to follow you between sites without asking. It is legal in most of the world.`);
+  fact(c,`A page can also ask for your camera, microphone and exact location. This one did not. If it had, your browser would have shown a prompt; most people press Allow within two seconds. We did not ask, because we did not need it. That decision is the whole subject.`);
+  const nameBox=el(`<div><p>One more thing. Type your first name, then press enter. Watch the line below while you type.</p><input type="text" id="nm" maxlength="20" autocomplete="off" placeholder="first name"><div class="term" id="keys" style="min-height:2.4em"></div></div>`);
+  c.appendChild(nameBox);
+  const inp=nameBox.querySelector("#nm"),kt=nameBox.querySelector("#keys");let last=0;
+  inp.addEventListener("keydown",e=>{const now=performance.now();if(last)S.keys.push(Math.round(now-last));last=now;
+    if(e.key==="Enter"&&inp.value.trim()){S.name=inp.value.trim().replace(/[^A-Za-zÀ-ɏ' -]/g,"");save();
+      const avg=S.keys.length?Math.round(S.keys.reduce((a,b)=>a+b,0)/S.keys.length):0;
+      kt.innerHTML=`<span class="ln">typing rhythm: ${S.keys.join(" ")} ms</span><span class="ln">average gap: ${avg} ms. Typing rhythm is a biometric. Banks already use it to tell you from a fraudster.</span>`;
+      inp.disabled=true;next(c,`fine. Now judge me, ${S.name} →`,3)}
+    else kt.innerHTML=`<span class="ln">keys so far: ${S.keys.length}  gaps: ${S.keys.slice(-6).join(" ")} ms</span>`});
+  inp.focus();
+},
+// 3: the algorithm decides your grade
+async 3(){
+  const c=card(`${S.name||"You"}, your teacher says you are a grade 8.`,"stage 3: the algorithm");
+  c.appendChild(el(`<p>It is results day. Exams were cancelled. An algorithm sets your grade from two things: your teacher's prediction, and how pupils at <b>your school</b> did in the past three years.</p>`));
+  const ui=el(`<div><div class="row"><label>teacher's predicted grade <input type="number" id="pg" min="1" max="9" value="8" style="max-width:90px"></label></div>
+  <p>Share of pupils at your school who got grade 7 or above in the last three years: <b id="hv">20%</b></p><input type="range" id="hist" min="5" max="85" value="20">
+  <div class="cols"><div class="card" style="margin-top:10px"><div class="eyebrow">you</div><div class="grade" id="g1">8</div><div class="dim" id="w1"></div></div><div class="card" style="margin-top:10px"><div class="eyebrow">same work, a school where 75% got 7+</div><div class="grade" id="g2">8</div><div class="dim">algorithm: no cap at this school</div></div></div></div>`);
+  c.appendChild(ui);
+  const pg=ui.querySelector("#pg"),hist=ui.querySelector("#hist"),hv=ui.querySelector("#hv"),g1=ui.querySelector("#g1"),g2=ui.querySelector("#g2"),w1=ui.querySelector("#w1");
+  function calc(){const p=Math.max(1,Math.min(9,+pg.value||8)),h=+hist.value;hv.textContent=h+"%";
+    let cap=9;if(h<15)cap=5;else if(h<30)cap=6;else if(h<45)cap=7;else if(h<60)cap=8;
+    const mine=p>=7?Math.min(p,cap):p;g1.textContent=mine;g1.className="grade "+(mine<p?"r":"g");
+    w1.textContent=mine<p?`algorithm: downgraded from ${p}. Your school "does not produce" grade ${p}s.`:"algorithm: no change";
+    g2.textContent=p;S.choices.grade=`${p}>${mine}@${h}`;save()}
+  pg.oninput=hist.oninput=calc;calc();
+  reveal(c,"ethical: fairness and bias",`Move the slider. Your work does not change. Your grade does. The algorithm did not look at you. It looked at the pupils who sat in your chair before you.`);
+  fact(c,`This happened in England in August 2020. Ofqual's algorithm lowered about 40% of A-level grades below teachers' predictions. Classes of five or fewer kept the teacher grade, which favoured small private-school classes. After four days of protests the government scrapped it on 17 August 2020 and used teacher grades. Nobody at Ofqual had done anything illegal.`);
+  const q=el(`<p>Was the algorithm <i>wrong</i>, or was it doing exactly what it was told? Pick one.</p><div class="row"><button data-v="wrong">it was wrong</button><button data-v="told">it did what it was told</button><button data-v="both">both, and that is the problem</button></div>`);
+  c.appendChild(q);q.querySelectorAll("button").forEach(b=>b.onclick=()=>{S.choices.ofqual=b.dataset.v;issue("ethical");q.querySelectorAll("button").forEach(x=>x.disabled=true);
+    c.appendChild(el(`<p class="a">Every option is defensible. The point is that a human chose the rule "past results cap future grades", and nobody asked the pupils. Ethics is the part of the system nobody codes by accident.</p>`));next(c,"now you drive →",4)});
+},
+// 4: the car
+async 4(){
+  const c=card("A car with no driver has 0.4 seconds.","stage 4: the code decides");
+  c.appendChild(el(`<p>You are not in the car. You are the programmer, two years earlier, writing the rule it will follow. Choose. The car cannot stop in time.</p>`));
+  const Q=[["A child runs into the road. Brake straight on and hit the child, or swerve into a wall and injure your passenger?",["hit the child","swerve, injure passenger"],"In the Moral Machine study most people worldwide chose to spare the young. Then they said they would not buy a car that might sacrifice its passenger."],
+           ["Three adults crossing on a red light, or one adult waiting legally on the pavement?",["hit the three jaywalkers","hit the one on the pavement"],"People in the UK, US and Germany leaned towards sparing the law-abiding pedestrian even when it cost more lives. Other cultures weighed numbers more."],
+           ["A dog on a lead with its owner, or a fence that will write off the car and injure you, the passenger?",["hit the dog and owner","hit the fence"],"Nearly everyone spares humans over animals. Almost nobody wants to be the passenger in the car that does it."]];
+  let i=0;const box=el(`<div></div>`);c.appendChild(box);
+  function ask(){if(i>=Q.length)return done();const [q,opts,note]=Q[i];const d=el(`<div class="term"><span class="ln">scenario ${i+1}/3: ${q}</span></div>`);box.appendChild(d);
+    const r=el(`<div class="row"></div>`);opts.forEach((o,k)=>{const b=el(`<button>${o}</button>`);b.onclick=()=>{S.choices["car"+i]=k;save();r.remove();d.appendChild(el(`<span class="ln out">you chose: ${o}</span><span class="ln out dim">${note}</span>`));i++;ask()};r.appendChild(b)});box.appendChild(r)}
+  function done(){issue("ethical");reveal(c,"ethical: accountability",`You just wrote a rule that will run on every road, in every one of those cars, with no human deciding in the moment. Who answers in court: you, the company that shipped it, the owner who bought it, or the car?`);
+    fact(c,`MIT's Moral Machine collected about 40 million decisions from people in 233 countries and territories between 2016 and 2018, and found that cultures disagree about who to spare. In the UK the Automated Vehicles Act 2024 says that while a car is driving itself, the company authorised to run it is responsible, not the person in the seat. Driverless taxis already carry paying passengers in several US cities.`);
+    next(c,"the computer says you stole →",5)}
+  ask();
+},
+// 5: horizon
+async 5(){
+  const c=card(`${S.name||"You"}, you run a village post office.`,"stage 5: the computer is always right");
+  const t=el(`<div class="term"></div>`);c.appendChild(t);const sk=skipBtn(c);
+  await type(t,[`Horizon v4.2   branch 118843   Tuesday 17:31`,`  cash declared:      £6,871.40`,`  cash expected:      £9,186.00`,`  DISCREPANCY:        £2,314.60 SHORT`,`you have counted the till twice. It is all there.`,`your contract says you are personally liable for any shortfall.`]);sk.remove();
+  const opts=[["pay it from your savings and say nothing","Most did this. Many paid thousands over years, remortgaged, borrowed from family. The shortfalls kept appearing, because the bug was in the software, not the till."],
+              ["phone the helpline and report a software fault","The helpline told callers they were the only one having this problem. They were not. Hundreds were calling. The Post Office knew."],
+              ["refuse to pay and demand an audit","Refusing meant suspension, then prosecution for theft or false accounting. The Post Office ran its own prosecutions. Horizon's figures were treated as proof."]];
+  const r=el(`<div class="row"></div>`);opts.forEach(([o,res],k)=>{const b=el(`<button>${o}</button>`);b.onclick=()=>{S.choices.horizon=k;save();r.remove();t.appendChild(el(`<span class="ln">you: ${o}</span><span class="ln out a">${res}</span>`));fin()};r.appendChild(b)});c.appendChild(r);
+  function fin(){issue("ethical");reveal(c,"ethical: trusting the machine over the person",`There was no good choice, because the system had already decided you were guilty and the people around it chose to believe the system.`);
+    fact(c,`Between 1999 and 2015 more than 900 subpostmasters were prosecuted using Horizon data. Some went to prison; at least four took their own lives. Fujitsu staff knew about bugs and could alter branch accounts remotely. In 2024 Parliament passed a law quashing the convictions. Since 1999, English courts have presumed that a computer's output is reliable unless someone proves otherwise. Nobody in this story broke the law until the law was changed.`);
+    c.appendChild(el(`<p>Write this down, it is the exam sentence: <b>legal is not the same as ethical.</b></p>`));next(c,"one more call →",6)}
+},
+// 6: deepfake call
+async 6(){
+  const c=card("Friday 16:48. Your boss is on a video call.","stage 6: bearing false witness");
+  c.appendChild(el(`<p>You work in finance. The chief financial officer and four colleagues you recognise are on the call. Faces, voices, the office behind them. It is all correct.</p>`));
+  const chat=el(`<div class="chat"></div>`);c.appendChild(chat);
+  const msgs=[["CFO","Sorry to drop this on you at the end of the day. We are closing a confidential acquisition and legal needs the funds moved before the Hong Kong market opens."],["CFO","Fifteen transfers, the account details are in the message I have just sent. It is time-critical and it cannot go through the usual approvals because of the confidentiality."],["Colleague (Priya)","I have done the first two, it is fine, just needs you for the rest."]];
+  for(const [w,m] of msgs){await wait(S.fast?0:600);chat.appendChild(el(`<div class="msg them"><small>${w}</small>${m}</div>`))}
+  const r=el(`<div class="row"><button data-k="0">make the transfers</button><button data-k="1">reply on the call asking for the paperwork</button><button data-k="2">hang up and ring the CFO on the number you already have</button></div>`);c.appendChild(r);
+  r.querySelectorAll("button").forEach(b=>b.onclick=()=>{S.choices.deepfake=+b.dataset.k;save();r.remove();const k=+b.dataset.k;
+    chat.appendChild(el(`<div class="msg me">${b.textContent}</div>`));
+    const res=["You have just sent about £20 million to criminals. Every face and voice on that call was generated.","They have the paperwork ready. It is as fake as the faces. Most people who asked a question still paid.","The real CFO has never heard of the meeting. You are the only person who checked using a channel the attackers did not control."][k];
+    chat.appendChild(el(`<div class="msg them"><small>what actually happens</small>${res}</div>`));
+    issue("ethical");reveal(c,"ethical: truth",`The fifth commandment of computer ethics, written in 1992, says do not use a computer to bear false witness. In 1992 that meant a forged email. Now it means your face.`);
+    fact(c,`In early 2024 an employee at the engineering firm Arup in Hong Kong joined exactly this call and transferred about HK$200 million (around £20 million) across fifteen payments. Every other person on the call was a deepfake. The company confirmed it publicly. Making a sexual deepfake of a real person without consent is now a criminal offence in England and Wales; most other deepfakes are not illegal to create.`);
+    next(c,"so what is ethics? →",7)});
+},
+// 7: the point
+async 7(){
+  const c=card("Everything this page did to you was legal.","stage 7: the point");
+  const t=el(`<div class="term"></div>`);c.appendChild(t);const sk=skipBtn(c);
+  await type(t,[`audit of this page:`,`  data sent to a server:        0 bytes`,`  cookies set:                  0`,`  camera, microphone, location: not requested`,`  things read from your device: 13, shown to you, then forgotten`,`  your name stored:             only in this tab, gone when you close it`,`all of the above was a choice. The code to do the opposite is shorter.`]);sk.remove();
+  c.appendChild(el(`<h2>Definition, for the exam</h2><div class="fact" style="border-color:var(--green)">Ethics: the moral principles that decide what is right and wrong. An ethical issue in computing is a question of right and wrong created by what a system does or how it is used, whatever the law says.</div>`));
+  c.appendChild(el(`<p>OCR J277 1.6 calls the five kinds of issue <b>ethical, legal, cultural, environmental and privacy</b>. Today you met ethical issues (fairness, accountability, trust, truth) and privacy issues (consent, tracking, biometrics). Every one was done by people who had a choice and a keyboard.</p>`));
+  c.appendChild(el(`<p>The Computer Ethics Institute wrote ten commandments for this in 1992. The ninth is the one that covers everything you saw: <b>think about the social consequences of the program you are writing.</b> Someone wrote the consent box. Someone wrote the grade cap. Someone wrote the car's rule. Someone at Fujitsu wrote Horizon. Someone will write the next one. Some of you.</p>`));
+  // result code
+  const nm=(S.name||"anon").toLowerCase().replace(/[^a-z]/g,"").slice(0,10)||"anon";
+  const ch=[S.consent==="accept"?"A":"M",Math.round(S.readMs/1000),S.choices.ofqual||"-",`${S.choices.car0??"-"}${S.choices.car1??"-"}${S.choices.car2??"-"}`,S.choices.horizon??"-",S.choices.deepfake??"-"].join(".");
+  const code=`ETH1.${nm}.${ch}.${fnv("eth-"+nm+"-"+ch)}`;
+  c.appendChild(el(`<h2>Your result code</h2><p>Copy it into your Class Notes. It records your choices, not your name beyond what you typed, and it is signed so it cannot be invented.</p><div class="code" id="rc">${code}</div><div class="row"><button id="cp">copy code</button><button class="ghost" onclick="go(1)">run it again</button></div>`));
+  c.querySelector("#cp").onclick=async()=>{try{await navigator.clipboard.writeText(code);c.querySelector("#cp").textContent="copied"}catch(e){const r=document.createRange();r.selectNodeContents(c.querySelector("#rc"));getSelection().removeAllRanges();getSelection().addRange(r)}};
+  c.appendChild(el(`<h2>Three questions for your book</h2><ol><li>Give one thing this page did that was legal but, in your view, not ethical. Explain why in two sentences.</li><li>In the grade algorithm, who were the stakeholders and which of them had no say?</li><li>Write the rule you would make your driverless car follow, in one sentence, and one problem with it.</li></ol>`));
+  c.appendChild(el(`<p class="dim">Sources you can check: Ofqual 2020 grading, BBC and Ofqual reports; Moral Machine, Awad et al., Nature 2018; Post Office Horizon IT Inquiry, postofficehorizoninquiry.org.uk; Arup deepfake, Financial Times and CNN, February 2024; F-Secure Herod clause, The Guardian, September 2014; Purple wifi terms, July 2017; Automated Vehicles Act 2024, legislation.gov.uk.</p>`));
+}
+};
+
+// ---------- the dossier (all client-side, nothing leaves) ----------
+async function dossier(){
+  const n=navigator,sc=screen,rows=[];
+  const ua=n.userAgent;const os=/Android/.test(ua)?"Android":/iPhone|iPad/.test(ua)?"iOS":/Windows/.test(ua)?"Windows":/Mac/.test(ua)?"macOS":/CrOS/.test(ua)?"ChromeOS":/Linux/.test(ua)?"Linux":"unknown";
+  const br=/Edg\//.test(ua)?"Edge":/OPR\//.test(ua)?"Opera":/Chrome\//.test(ua)?"Chrome":/Safari\//.test(ua)?"Safari":/Firefox\//.test(ua)?"Firefox":"unknown";
+  const touch=("ontouchstart" in window)||n.maxTouchPoints>0;
+  const diag=Math.sqrt(sc.width**2+sc.height**2)*(devicePixelRatio||1)/160/ (devicePixelRatio>2?1.6:1);
+  const kind=touch&&Math.min(sc.width,sc.height)<700?"a phone":touch?"a tablet or touch laptop":"a laptop or desktop";
+  rows.push(["device",`${kind}, ${os}, ${br}`]);
+  rows.push(["screen",`${sc.width} x ${sc.height}, pixel ratio ${devicePixelRatio||1}`]);
+  rows.push(["language",n.language+(n.languages&&n.languages.length>1?" (+"+(n.languages.length-1)+" more)":"")]);
+  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const now=new Date();
+  rows.push(["time zone",tz||"unknown"]);
+  rows.push(["local time",now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})+(now.getHours()<8?" (early. School?)":now.getHours()>=22?" (late. Still up.)":"")]);
+  rows.push(["cores",n.hardwareConcurrency?n.hardwareConcurrency+" CPU cores":"hidden by browser"]);
+  rows.push(["memory",n.deviceMemory?"about "+n.deviceMemory+" GB RAM":"hidden by browser"]);
+  rows.push(["connection",n.connection&&n.connection.effectiveType?n.connection.effectiveType+(n.connection.saveData?", data saver on":""):"hidden by browser"]);
+  let bat="not available in this browser";
+  try{if(n.getBattery){const b=await n.getBattery();bat=Math.round(b.level*100)+"%"+(b.charging?", charging":", not charging")+(b.level<0.2&&!b.charging?" (low. Stressful.)":"")}}catch(e){}
+  rows.push(["battery",bat]);
+  rows.push(["dark mode",matchMedia("(prefers-color-scheme: dark)").matches?"on":"off"]);
+  rows.push(["came from",document.referrer?new URL(document.referrer).hostname:"typed or app link"]);
+  rows.push(["movement",`${S.moves} pointer moves since the page opened`]);
+  const fp=fnv([ua,sc.width,sc.height,devicePixelRatio,n.language,tz,n.hardwareConcurrency,n.deviceMemory,touch].join("|"));
+  S.fp=fp;return{rows,fp};
+}
+
+// ---------- boot ----------
+if(S.stage>=1){document.getElementById("overlay").classList.add("hidden");go(S.stage)}
+</script>
+</body>
+</html>
